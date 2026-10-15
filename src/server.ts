@@ -13,6 +13,7 @@ import swaggerUi from 'swagger-ui-express'; // permite mostrar Swagger en el nav
 import swaggerDocument from './config/swagger'; // importa el documento que hemos creado en swagger.ts
 import userRoutes from './routes/Users';
 import { StartChat } from './sockets/Chat';
+import cookieParser from 'cookie-parser';
 
 const router = express();
 
@@ -68,7 +69,9 @@ const StartServer = () => {
         next(new Error('Not found'));
     });
 
-    router.use(ErrorHandler);
+  router.use(ErrorHandler);
+  router.use(cookieParser());
+
 
     // Express y socket.io comparten el mismo servidor HTTP (y el mismo puerto)
     const server = http.createServer(router);

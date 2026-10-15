@@ -39,8 +39,7 @@ export const login = async (email: string, password: string) => {
     // Asi el que llama no puede saber que emails estan registrados.
     if (!user || !(await verifyPassword(password, user.password))) {
         return null;
-    }
-
+  }
     return {
         token: signAccessToken(user),
         refreshToken: signRefreshToken(user),

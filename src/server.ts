@@ -36,6 +36,8 @@ const StartServer = () => {
     /** CORS */
     router.use(Cors);
 
+    router.use(cookieParser());
+
     /** Routes */
     // Cada router protege sus propias rutas con VerifyToken y RequireRole (ver src/routes/).
     // /auth es publica: registro, login y refresh.
@@ -70,7 +72,6 @@ const StartServer = () => {
     });
 
   router.use(ErrorHandler);
-  router.use(cookieParser());
 
 
     // Express y socket.io comparten el mismo servidor HTTP (y el mismo puerto)

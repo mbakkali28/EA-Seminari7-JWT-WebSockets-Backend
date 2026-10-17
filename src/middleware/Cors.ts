@@ -6,7 +6,16 @@ import { config } from '../config/config';
 // De las peticiones OPTIONS (las que manda el navegador antes de la real) se encarga
 // el propio paquete cors.
 export const Cors = cors({
-    origin: config.cors.origin,
+    origin: (origin, callback) => {
+      // Si CORS_ORIGIN es '*', permitimos dinámicamente cualquier origen que haga la petición
+      if (config.cors.origin === '*' || !origin) {
+        callback(null, true);
+      } else if (origin === config.cors.origin || origin === 'http://localhost:4200') {
+        callback(null, true);
+      } else {
+        callback(new Error('No permitido por CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
     credentials: true

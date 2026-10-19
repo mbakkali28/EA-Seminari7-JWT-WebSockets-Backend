@@ -20,6 +20,12 @@ export const usersSeed: IUser[] = [
         email: 'user@example.com',
         password: 'seminari7',
         role: 'user'
+    },
+    {
+        name: 'Admin2',
+        email: 'admin2@example.com',
+        password: 'seminari7',
+        role: 'admin'
     }
 ];
 

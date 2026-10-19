@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import BookService from '../services/BookService';
 import type { PaginationQuery } from '../middleware/Joi';
+import { notifyChange } from '../sockets/Notifier';
 
 // Función para crear un libro nuevo
 // Cogemos los datos que llegan en el body y los pasamos al servicio
@@ -10,6 +11,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
 
         // Si se ha creado correctamente devolvemos el libro creado
         // El codigo 201 indica que se ha creado un recurso nuevo
+        notifyChange({ entity: 'book', action: 'created' });
         res.status(201).json({ book });
     } catch (error) {
         // Si ocurre algun error lo pasamos al siguiente middleware
@@ -67,6 +69,7 @@ const updateBook = async (req: Request<{ bookId: string }>, res: Response, next:
         // Comprobamos si el libro se ha encontrado y actualizado
         if (book) {
             // Si todo ha ido bien devolvemos el libro actualizado
+            notifyChange({ entity: 'book', action: 'updated' });
             res.status(200).json({ book });
         } else {
             // Si no existe el libro devolvemos un error 404
@@ -92,6 +95,7 @@ const deleteBook = async (req: Request<{ bookId: string }>, res: Response, next:
             // Si se ha eliminado correctamente devolvemos el codigo 204
             // Este codigo indica que la petición se ha realizado correctamente
             // pero no hay contenido que devolver
+            notifyChange({ entity: 'book', action: 'deleted' });
             res.status(204).send();
         } else {
             // Si no encontramos el libro devolvemos un error 404

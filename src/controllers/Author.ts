@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthorService from '../services/AuthorService';
 import type { PaginationQuery } from '../middleware/Joi';
+import { notifyChange } from '../sockets/Notifier';
 
 // Función para crear un autor nuevo
 // Cogemos los datos que nos llegan en el body y se los pasamos al servicio
@@ -10,6 +11,7 @@ const createAuthor = async (req: Request, res: Response, next: NextFunction) => 
 
         // Si se ha creado correctamente devolvemos el autor creado
         // El codigo 201 indica que se ha creado un recurso nuevo
+        notifyChange({ entity: 'author', action: 'created' });
         res.status(201).json({ author });
     } catch (error) {
         // Si ocurre algun error lo pasamos al siguiente middleware
@@ -68,6 +70,7 @@ const updateAuthor = async (req: Request<{ authorId: string }>, res: Response, n
         // Comprobamos si se ha encontrado y actualizado el autor
         if (author) {
             // Si todo ha ido bien devolvemos el autor actualizado
+            notifyChange({ entity: 'author', action: 'updated' });
             res.status(200).json({ author });
         } else {
             // Si no existe el autor devolvemos un error 404
@@ -93,6 +96,7 @@ const deleteAuthor = async (req: Request<{ authorId: string }>, res: Response, n
             // Si se ha eliminado correctamente devolvemos el codigo 204
             // Este codigo indica que la petición se ha realizado correctamente
             // pero no hay contenido que devolver
+            notifyChange({ entity: 'author', action: 'deleted' });
             res.status(204).send();
         } else {
             // Si no encontramos el autor devolvemos un error 404

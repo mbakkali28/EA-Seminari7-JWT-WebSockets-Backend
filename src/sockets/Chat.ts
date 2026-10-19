@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { config } from '../config/config';
 import Logging from '../library/Logging';
 import { VerifySocketToken } from '../middleware/SocketAuth';
+import { setIo } from './Notifier';
 import Message from '../models/Message';
 import type { ChatJoinPayload, ChatMessage, ChatMessagePayload, ChatServer } from '../models/Message';
 
@@ -61,6 +62,9 @@ export const StartChat = (server: http.Server) => {
             methods: ['GET', 'POST']
         }
     });
+
+    // Pasamos la instancia de socket.io a Notifier
+    setIo(io);
 
     io.use(VerifySocketToken);
 
